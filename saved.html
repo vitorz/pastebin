@@ -1,0 +1,15 @@
+{{ define "title" }}Pastebin Home{{ end }}
+
+{{ define "content" }}
+<h1>Saved content</h1>
+<p><a href="{{.Home}}">Pastebin Home</a></p>
+<p>Url to retrieve content: <a href="{{.ContentUrl}}">{{.ContentUrl}}</a></p>
+{{if .Private}}
+<p>Can't show content as it is private</p>
+{{else}}
+<p>Content saved: {{.Content}}</p>
+{{end}}
+<div>
+    <img src="data:image/png;base64,{{.Qrcode}}" alt="Qrcode of the link" />
+</div>
+{{ end }}

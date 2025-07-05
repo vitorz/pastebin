@@ -1,0 +1,76 @@
+{{ define "title" }}Pastebin Content View{{ end }}
+{{ define "script" }}
+window.addEventListener('DOMContentLoaded', () => {
+    const contentKey = window.location.hash.substring(1);
+    fetch('/getContent', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: "contentKey="+contentKey
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.private) {
+            document.getElementById('private').classList.remove('hidden');
+            document.getElementById('plain').remove();
+            document.getElementById('contentPrivate').value=data.text
+        } else {
+            document.getElementById('plain').classList.remove('hidden');
+            document.getElementById('private').remove();
+            document.getElementById('contentPlain').value=data.text
+        }
+    })
+    .catch(err => {
+        console.error('Error:', err);
+    });
+});
+{{ end }}
+{{ define "content" }}
+<p><a href="{{.Home}}">Pastebin Home</a></p>
+<div id="notification" class="custom-alert">
+    Copied!
+</div>
+<div id="private" class="hidden">
+    <p>
+        <input type="password" class="content" id="contentPrivate" value="" contenteditable="false">
+        <button onclick="copyContent()">Copy text</button>
+    </p>
+    <p>
+        <label>
+            <input type="checkbox" onclick="togglePassword()"> Show Password
+        </label>
+    </p>
+    <script>
+        function togglePassword() {
+            const input = document.getElementById("contentPrivate");
+            input.type = input.type === "password" ? "text" : "password";
+        }
+    </script>
+    </p>
+</div>
+<div id="plain" class="hidden">
+    <p>Content saved:
+        <textarea class="content" id="contentPlain" contenteditable="false"></textarea>
+        <button onclick="copyContent()">Copy text</button>
+    </p>
+</div>
+<script>
+    function copyContent() {
+        const copyText = document.getElementsByClassName("content")[0];
+        // Select the text field
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the text inside the text field
+        navigator.clipboard.writeText(copyText.value);
+        copyText.setSelectionRange(0, 0);
+        
+        const alertBox = document.getElementById('notification');
+        alertBox.style.display = 'block';
+        setTimeout(() => {
+            alertBox.style.display = 'none';
+        }, 4000);
+    }
+</script>
+{{ end }}

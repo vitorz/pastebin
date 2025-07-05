@@ -1,0 +1,36 @@
+{{ define "title" }}Pastebin Home{{ end }}
+
+{{ define "content" }}
+<p>Ip address: {{.IP}}</p>
+<fieldset>
+    <legend>Plain text</legend>
+    <form action="/save" method="POST">
+        <div class="responsive-form"><textarea name="content"></textarea>
+            <input type="hidden" name="private" value="false" />
+        </div>
+        <div><input type="submit" value="SavePlain"></div>
+    </form>
+</fieldset>
+<fieldset>
+    <legend>Password</legend>
+    <form action="/save" method="POST">
+        <div class="responsive-form"><input id="password" name="content" type="password"></input>
+            <input type="hidden" name="private" value="true" />
+        </div>
+        <div><input type="submit" value="SavePwd"></div>
+    </form>
+    <label>
+        <input type="checkbox" onclick="togglePassword()"> Show Password
+    </label>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById("password");
+            input.type = input.type === "password" ? "text" : "password";
+        }
+    </script>
+</fieldset>
+{{ end }}
+
+
+
