@@ -1,6 +1,6 @@
 # pastebin
 
-**pastebin** is a simple, local-network-only, HTTPS-based Pastebin-like Linux tool for quickly sharing text snippets between devices on your home LAN.
+**pastebin** is a simple, local-network-only, HTTPS-based Pastebin-like Linux tool for quickly sharing text snippets between devices on your <u>**home LAN**</u>.
 
 This project is designed to be minimal and secure-by-default, exposing content only over HTTPS.
 
@@ -40,8 +40,7 @@ This project is designed to be minimal and secure-by-default, exposing content o
 3. At startup, you’ll be prompted to select a local IP address to bind to.  
    This is done using a **custom graphical selector** rendered in your terminal.
 
-4. After selection, a **QR code** will be shown in the terminal pointing to the HTTPS endpoint.  
-   Scan it with your mobile device to open the web interface without typing, or open the shown link directly with the local internet browser.
+4. After selection, an page URL and a related **QR code** will be shown in the terminal pointing to an HTTPS protected page where you can submit text to share.  
 
 5. Open your browser on any LAN-connected device/machine and go to:
 
@@ -64,6 +63,7 @@ This allows you to quickly access the pastebin interface by scanning — no manu
 ## 🔐 Security
 
 - HTTPS is always enforced (self-signed certificate will be generated if not present)
+- Regarding the content view URLs: the sensitive information (a randomly generated 4-character content identifier) is stored in the fragment identifier (after the #) of the URL. This part remains client-side and is not included in HTTP GET requests to the server.
 - No persistence: content lives only in memory
 - No authentication or login
 - Intended for **trusted, local network use only**
