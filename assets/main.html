@@ -14,7 +14,7 @@
 <fieldset>
     <legend>Password</legend>
     <form action="/save" method="POST">
-        <div class="responsive-form"><input id="password" name="content" type="password"></input>
+        <div class="responsive-form"><input id="private" name="content" type="password"></input>
             <input type="hidden" name="private" value="true" />
         </div>
         <div><input type="submit" value="SavePwd"></div>
@@ -25,7 +25,7 @@
 
     <script>
         function togglePassword() {
-            const input = document.getElementById("password");
+            const input = document.getElementById("private");
             input.type = input.type === "password" ? "text" : "password";
         }
     </script>
