@@ -40,7 +40,8 @@ This project is designed to be minimal and secure-by-default, exposing content o
 3. At startup, you’ll be prompted to select a local IP address to bind to.  
    This is done using a **custom graphical selector** rendered in your terminal.
 
-4. After selection, an page URL and a related **QR code** will be shown in the terminal pointing to an HTTPS protected page where you can submit text to share.  
+4. After selection, a page URL and a related **QR code** will be shown in the terminal pointing to an HTTPS protected page where you can submit text to share.
+![Terminal screencast](doc/pastebin_terminal.gif "Terminal")
 
 5. Open your browser on any LAN-connected device/machine and go to:
 
@@ -49,6 +50,8 @@ This project is designed to be minimal and secure-by-default, exposing content o
    ```
 
    *(Note: the certificate is self-signed; your browser may show a security warning.)*
+   
+   ![Browser screencast](doc/pastebin_browser.gif "Browser")
 
 ---
 
