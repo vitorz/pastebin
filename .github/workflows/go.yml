@@ -24,3 +24,9 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: /home/runner/work/pastebin/pastebin
