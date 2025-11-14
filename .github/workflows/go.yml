@@ -1,20 +1,21 @@
 # This workflow will build a golang project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
 
-name: Go
+name: Go Release
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - 'v*.*.*' # This workflow will run when a tag like v1.0.0 is pushed
 
 jobs:
-
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to create and upload assets to a GitHub Release
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout the repo
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -22,7 +23,35 @@ jobs:
         go-version: '1.24.x'
 
     - name: Build
-      run: go build -v ./...
+      # run: go build -v ./...
+      run: |
+        mkdir -p dist
+        GOOS=linux GOARCH=amd64 go build -o dist/pstb ./
 
     - name: Test
       run: go test -v ./...
+      
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }} # Uses the pushed tag as the release tag
+        release_name: Release ${{ github.ref }}
+        draft: true # Set to true to create a draft release (unpublished)
+        prerelease: false # Set to true for pre-releases (e.g., beta, alpha)
+        body: |
+          # Release ${{ github.ref }}
+
+          This release includes the latest build of the application.
+
+    - name: Upload Linux Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/pstb
+        asset_name: pstb
+
