@@ -57,4 +57,4 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./dist/pstb
         asset_name: pstb
-
+        asset_content_type: application/zip
