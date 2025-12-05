@@ -36,7 +36,7 @@ jobs:
       
     - name: Create GitHub Release
       id: create_release
-      uses: actions/create-release@v1
+      uses: actions/create-release@v1.1.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -50,7 +50,7 @@ jobs:
           This release includes the latest build of the application.
 
     - name: Upload Linux Asset
-      uses: actions/upload-release-asset@v1
+      uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
