@@ -3,9 +3,8 @@
 
 name: Go Release
 permissions:
-  contents: write
-  packages: write
-  actions: write
+  contents: read
+  pull-requests: write
 
 on:
   push:
