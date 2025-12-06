@@ -28,7 +28,7 @@ jobs:
     - name: Build
       run: |
         mkdir -p dist
-        echo '${{ github.ref }}' > assets/version
+        echo '${{ github.ref }}' | grep -oE 'v.+$' > assets/version
         GOOS=linux GOARCH=amd64 go build -o dist/pstb ./
 
     - name: Package Linux binary
