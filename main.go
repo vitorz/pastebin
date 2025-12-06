@@ -4,6 +4,8 @@ import (
 	"embed"
 	"flag"
 	"fmt"
+	"io"
+	"io/fs"
 	"log"
 	"net"
 	"os"
@@ -57,9 +59,42 @@ func getUserDataPath() (string, error) {
 	return filepath.Join(base, "pastebin"), nil
 }
 
+func readVersion() (string, error) {
+	subFS, _ := fs.Sub(staticFiles, "assets")
+	versionFile, err := subFS.Open("version")
+	var versionString string
+	if err == nil {
+		content, err := io.ReadAll(versionFile)
+		if err == nil {
+			versionString = string(content)
+		}
+	}
+	return versionString, err
+}
+
 func main() {
-	var ipAddress string
 	var port int
+	var version bool
+
+	// handling commandline options
+	flag.IntVar(&port, "port", 8443, "server listening port")
+	flag.BoolVar(&version, "version", false, "application release version")
+	flag.Parse()
+
+	if version {
+		if flag.NFlag() > 1 {
+			flag.Usage()
+			log.Fatal("Syntax error")
+		}
+		versionString, err := readVersion()
+		if err != nil {
+			log.Fatal("Error reading file:", err)
+		}
+		fmt.Println("Application version:", versionString)
+		os.Exit(0)
+	}
+
+	var ipAddress string
 	// select the network interface/listening address
 	interfaces, err := nets.GetRealInterfaces()
 	if err != nil || interfaces == nil || len(interfaces) == 0 {
@@ -69,11 +104,6 @@ func main() {
 	for _, intf := range interfaces {
 		fmt.Println(intf.String())
 	}
-
-	// handling commandline options
-	flag.IntVar(&port, "port", 8443, "server listening port")
-	flag.Parse()
-
 	fmt.Println("Desired port: ", port)
 
 	//asking user input for network interface selection

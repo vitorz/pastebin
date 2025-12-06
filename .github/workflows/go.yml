@@ -26,35 +26,28 @@ jobs:
         go-version: '1.24.x'
 
     - name: Build
-      # run: go build -v ./...
       run: |
         mkdir -p dist
+        echo '${{ github.ref }}' > assets/version
         GOOS=linux GOARCH=amd64 go build -o dist/pstb ./
+
+    - name: Package Linux binary
+      run: |
+        # name the artifact to indicate target platform
+        export TAG_NAME="${GITHUB_REF#refs/tags/}"
+        mv dist/pstb dist/pstb_linux_amd64
+        tar -czf dist/pstb_linux_amd64.tar.gz -C dist pstb_linux_amd64
+      shell: bash
 
     - name: Test
       run: go test -v ./...
-      
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1.1.4
+
+    - name: Create release and upload Linux asset
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }} # Uses the pushed tag as the release tag
-        release_name: Release ${{ github.ref }}
-        draft: true # Set to true to create a draft release (unpublished)
-        prerelease: false # Set to true for pre-releases (e.g., beta, alpha)
-        body: |
-          # Release ${{ github.ref }}
-
-          This release includes the latest build of the application.
-
-    - name: Upload Linux Asset
-      uses: actions/upload-release-asset@v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/pstb
-        asset_name: pstb
-        asset_content_type: application/zip
+      run: |
+        TAG="${GITHUB_REF#refs/tags/}"
+        gh release create "$TAG" dist/pstb_linux_amd64.tar.gz \
+          --title "Release $TAG (linux/amd64)" \
+          --notes "Release $TAG — linux/amd64 binary only." \
+          --draft

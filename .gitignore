@@ -47,3 +47,6 @@ coverage.out
 .env
 .envrc
 .env.*
+
+# Application version
+assets/version
