@@ -35,8 +35,7 @@ jobs:
       run: |
         # name the artifact to indicate target platform
         export TAG_NAME="${GITHUB_REF#refs/tags/}"
-        mv dist/pstb dist/pstb_linux_amd64
-        tar -czf dist/pstb_linux_amd64.tar.gz -C dist pstb_linux_amd64
+        tar -czf dist/pstb_linux_amd64.tar.gz -C dist pstb
       shell: bash
 
     - name: Test
